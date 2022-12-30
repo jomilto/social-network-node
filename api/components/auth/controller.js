@@ -1,4 +1,5 @@
-const nanoid = require('nanoid');
+const auth = require('../../../auth');
+const bcrypt = require("bcrypt");
 
 const TABLE = 'auth';
 
@@ -6,7 +7,18 @@ module.exports = function(injectedStore) {
   let store = injectedStore;
   if (!store) store = require('../../../store/dummy');
 
- function upsert(data) {
+  async function login(username, password) {
+    const data = await store.query(TABLE, { username });
+    if (data && await bcrypt.compare(password,data.password)) {
+      delete data.password;
+      return auth.sign(data);
+    }
+    else {
+      throw new Error('Invalid Credentials');
+    }
+  }
+
+ async function upsert(data) {
   const authData = {
     id: data.id,
   }
@@ -14,13 +26,14 @@ module.exports = function(injectedStore) {
     authData.username = data.username
   }
   if (data.password) {
-    authData.password = data.password;
+    authData.password = await bcrypt.hash(data.password, 5);
   }
 
   return store.upsert(TABLE, authData);
  }
 
  return {
+  login,
   upsert
  };
 }

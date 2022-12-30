@@ -5,12 +5,12 @@ const db = {
 };
 
 async function list(table) {
-  return db[table];
+  return db[table] || [];
 }
 
 async function get (table, id) {
   let collection = await list(table);
-  return collection.find(item => item.id == id) || null
+  return collection.find(item => item.id == id) || null;
 }
 
 async function upsert(table, data) {
@@ -23,9 +23,17 @@ async function remove(table, id) {
   return true;
 }
 
+async function query(table, q) {
+  let collection = await list(table);
+  let keys = Object.keys(q), key = keys[0];
+
+  return collection.find(item => item[key] == q[key]) || null;
+}
+
 module.exports = {
   list,
   get,
   upsert,
-  remove
+  remove,
+  query
 }
