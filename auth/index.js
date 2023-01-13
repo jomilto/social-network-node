@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 const config = require("../config");
+const error = require('../utils/error');
+
 const { secret } = config.JWT;
 
 function sign(data) {
@@ -13,7 +15,7 @@ function verify(token) {
 const check = {
   own: function (req, owner) {
     const decodedToken = decodeHeader(req);
-    if(decodedToken.id !== owner) throw new Error("Missing permitions")
+    if(decodedToken.id !== owner) throw error("Missing permitions", 401);
   }
 }
 
