@@ -20,8 +20,8 @@ const check = {
 }
 
 function getToken (auth) {
-  if(!auth) throw new Error('Missing token');
-  if(!auth.includes("Bearer ")) throw new Error("Token not identified");
+  if(!auth) throw error('Missing token', 401);
+  if(!auth.includes("Bearer ")) throw error("Token not identified", 401);
   let token = auth.replace("Bearer ", "");
 
   return token;
