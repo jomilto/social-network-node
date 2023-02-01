@@ -15,6 +15,9 @@ module.exports = function checkAuth(action) {
       case "follow":
         auth.check.logged(req);
         break;
+      case "following":
+        auth.check.logged(req);
+        break;
     }
     next();
   }

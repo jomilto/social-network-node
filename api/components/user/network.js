@@ -7,8 +7,9 @@ const controller = require('./index');
 const router = express.Router();
 
 router.get('/', list);
-router.get('/:id', get);
 router.post('/follow/:id', secure("follow"), follow);
+router.get('/:id/following', secure("following"), following)
+router.get('/:id', get);
 router.post('/', upsert);
 router.put('/', secure("update"), upsert);
 router.delete('/', secure("remove"), remove);
@@ -59,6 +60,16 @@ async function follow(req, res, next) {
     const { id } = req.params;
     const result = await controller.follow(req.user.id, id);
     response.success(req, res, `User ${req.user.id} is following ${id}`, 200);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function following(req, res, next) {
+  try {
+    const { id } = req.params;
+    const results = await controller.following(id);
+    response.success(req, res, results, 200);
   } catch (error) {
     next(error);
   }
