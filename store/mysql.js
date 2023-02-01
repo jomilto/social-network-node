@@ -60,9 +60,9 @@ function get(table, id) {
 
 function insert(table, data) {
   return new Promise((resolve, reject) => {
-      connection.query(`INSERT INTO ?? SET ?;`, [table, data], (err, result) => {
+      connection.query(`INSERT INTO ${table} SET ?;`, data, (err, result) => {
           if (err) return reject(err);
-          resolve(result);
+          resolve(data.id);
       })
   })
 }
@@ -71,13 +71,13 @@ function update(table, data) {
   return new Promise((resolve, reject) => {
       connection.query(`UPDATE ?? SET ? WHERE id=? LIMIT 1;`, [table, data, data.id], (err, result) => {
           if (err) return reject(err);
-          resolve(result);
+          resolve(data.id);
       })
   })
 }
 
-function upsert(table, data) {
-  if (data && data.id) {
+function upsert(table, data, createRecord) {
+  if (data && !createRecord) {
       return update(table, data);
   } else {
       return insert(table, data);

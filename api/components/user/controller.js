@@ -1,5 +1,5 @@
 const auth = require('../auth');
-
+const crypto = require('crypto').webcrypto;
 const TABLE = 'user';
 
 module.exports = function(injectedStore) {
@@ -15,6 +15,7 @@ module.exports = function(injectedStore) {
   }
 
   async function upsert(body) {
+    let createRecord = false;
     const user = {
       name: body.name,
       username: body.username,
@@ -25,6 +26,7 @@ module.exports = function(injectedStore) {
     }
     else {
       user.id = crypto.randomUUID();
+      createRecord = true;
     }
 
     if (body.password || body.username) {
@@ -32,14 +34,19 @@ module.exports = function(injectedStore) {
         id: user.id,
         username: body.username,
         password: body.password
-      })
+      }, createRecord)
     }
-    return store.upsert(TABLE, user);
+    return store.upsert(TABLE, user, createRecord);
+  }
+
+  async function remove(id) {
+     return await auth.remove(id) && await store.remove(TABLE, id);
   }
 
   return {
     list,
     get,
-    upsert
+    upsert,
+    remove
   }
 }

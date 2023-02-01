@@ -1,6 +1,7 @@
 module.exports = {
   API: {
     PORT: process.env.API_PORT || 3000,
+    URL: process.env.API_URL || "http://localhost"
   },
   JWT: {
     secret: process.env.SECRECT || "secretPassword"

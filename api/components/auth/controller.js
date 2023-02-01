@@ -11,14 +11,14 @@ module.exports = function(injectedStore) {
     const data = await store.query(TABLE, { username });
     if (data && await bcrypt.compare(password,data.password)) {
       delete data.password;
-      return auth.sign(data);
+      return auth.sign({...data});
     }
     else {
       throw new Error('Invalid Credentials');
     }
   }
 
- async function upsert(data) {
+ async function upsert(data, createRecord) {
   const authData = {
     id: data.id,
   }
@@ -29,11 +29,16 @@ module.exports = function(injectedStore) {
     authData.password = await bcrypt.hash(data.password, 5);
   }
 
-  return store.upsert(TABLE, authData);
+  return store.upsert(TABLE, authData, createRecord);
+ }
+
+ async function remove(id) {
+  return store.remove(TABLE, id);
  }
 
  return {
   login,
-  upsert
+  upsert,
+  remove
  };
 }

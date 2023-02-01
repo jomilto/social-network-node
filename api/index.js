@@ -15,5 +15,5 @@ app.use('/api/auth', auth);
 app.use(errors);
 
 app.listen(config.API.PORT, () => {
-  console.log('Listening on port', config.API.PORT);
+  console.log(`Listening on ${config.API.URL}:${config.API.PORT}`);
 });

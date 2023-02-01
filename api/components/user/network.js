@@ -10,6 +10,7 @@ router.get('/', list);
 router.get('/:id', get);
 router.post('/', upsert);
 router.put('/', secure("update"), upsert);
+router.delete('/', secure("remove"), remove);
 
 async function get(req, res, next) {
   try {
@@ -35,6 +36,17 @@ async function upsert(req, res, next) {
   try {
     const user = await controller.upsert(req.body);
     response.success(req, res, user, 201);
+  }
+  catch (error) {
+    next(error);
+  }
+}
+
+async function remove(req, res, next) {
+  try {
+   const { id } = req.body;
+   const deleted = await controller.remove(id);
+   response.success(req, res, deleted, 200);
   }
   catch (error) {
     next(error);
