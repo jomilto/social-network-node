@@ -12,6 +12,9 @@ module.exports = function checkAuth(action) {
           owner = req.body.id;
           auth.check.own(req, owner);
           break;
+      case "follow":
+        auth.check.logged(req);
+        break;
     }
     next();
   }

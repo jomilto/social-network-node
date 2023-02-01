@@ -16,6 +16,9 @@ const check = {
   own: function (req, owner) {
     const decodedToken = decodeHeader(req);
     if(decodedToken.id !== owner) throw error("Missing permitions", 401);
+  },
+  logged: function (req) {
+    const decodedToken = decodeHeader(req);
   }
 }
 

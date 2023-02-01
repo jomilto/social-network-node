@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.get('/', list);
 router.get('/:id', get);
+router.post('/follow/:id', secure("follow"), follow);
 router.post('/', upsert);
 router.put('/', secure("update"), upsert);
 router.delete('/', secure("remove"), remove);
@@ -49,6 +50,16 @@ async function remove(req, res, next) {
    response.success(req, res, deleted, 200);
   }
   catch (error) {
+    next(error);
+  }
+}
+
+async function follow(req, res, next) {
+  try {
+    const { id } = req.params;
+    const result = await controller.follow(req.user.id, id);
+    response.success(req, res, `User ${req.user.id} is following ${id}`, 200);
+  } catch (error) {
     next(error);
   }
 }

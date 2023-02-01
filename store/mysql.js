@@ -62,7 +62,7 @@ function insert(table, data) {
   return new Promise((resolve, reject) => {
       connection.query(`INSERT INTO ${table} SET ?;`, data, (err, result) => {
           if (err) return reject(err);
-          resolve(data.id);
+          resolve(data.id || true);
       })
   })
 }
@@ -71,7 +71,7 @@ function update(table, data) {
   return new Promise((resolve, reject) => {
       connection.query(`UPDATE ?? SET ? WHERE id=? LIMIT 1;`, [table, data, data.id], (err, result) => {
           if (err) return reject(err);
-          resolve(data.id);
+          resolve(data.id || true);
       })
   })
 }

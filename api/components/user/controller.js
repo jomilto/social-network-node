@@ -43,10 +43,18 @@ module.exports = function(injectedStore) {
      return await auth.remove(id) && await store.remove(TABLE, id);
   }
 
+  async function follow(from, to) {
+    return store.upsert(TABLE + "_follow", {
+      user_from: from,
+      user_to: to
+    }, true);
+  }
+
   return {
     list,
     get,
     upsert,
-    remove
+    remove,
+    follow
   }
 }
