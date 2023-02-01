@@ -51,9 +51,9 @@ function list(table) {
 
 function get(table, id) {
   return new Promise((resolve, reject) => {
-    connection.query(`SELECT * FROM ?? WHERE id = ?;`, [table, id], function (error, results) {
+    connection.query(`SELECT * FROM ?? WHERE id = ? limit 1;`, [table, id], function (error, results) {
       if (error) return reject(error);
-      return resolve(results);
+      return resolve(results[0]);
     });
   });
 }
@@ -96,7 +96,7 @@ function query(table, query, join) {
   return new Promise((resolve, reject) => {
       connection.query(`SELECT * FROM ?? ${joinQuery} WHERE ??.?;`, [table, table, query], (err, res) => {
           if (err) return reject(err);
-          resolve(res[0] || null);
+          resolve(res || null);
       })
   })
 }
